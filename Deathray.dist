@@ -7,8 +7,8 @@ darcs-dev / fh.daimi.au.dk:/users/cgd/code/openengine
 
 # project repository
 # (uncomment the following two lines after uploading your project)
-#darcs /projects/Deathray http://openengine.dk/code/projects/Deathray
-#darcs-dev /projects/Deathray fh.daimi.au.dk:/users/cgd/code/projects/Deathray
+darcs /projects/Deathray http://openengine.dk/code/projects/Deathray
+darcs-dev /projects/Deathray fh.daimi.au.dk:/users/cgd/code/projects/Deathray
 
 # required extensions
 darcs /extensions/SetupHelpers           http://openengine.dk/code/extensions/SetupHelpers
