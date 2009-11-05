@@ -29,4 +29,5 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
   # Extension dependencies
   Extensions_SDL
   Extensions_SetupHelpers  
+  Extensions_DoseCalculation
 )
