@@ -63,8 +63,6 @@ int main(int argc, char** argv) {
     // Create simple setup
     SimpleSetup* setup = new SimpleSetup("Death by tray.. I mean Death Ray", vp, env, rv);
 
-    IMouse* mouse = 
-    IKeyboard* keyboard;
 
     // Setup Loaders
     ResourceManager<ITexture3DResource>::AddPlugin(new MHDResourcePlugin());
@@ -91,10 +89,10 @@ int main(int argc, char** argv) {
     CameraTool* ct = new CameraTool();
     chain->PushBackTool(ct);    
 
-    MouseSelection* ms = new MouseSelection(*frame, setup->GetMouse(), NULL);
-    ms->BindTool(viewport, chain);
+    MouseSelection* ms = new MouseSelection(env->GetFrame(), setup->GetMouse(), NULL);
+    ms->BindTool(vp, chain);
     
-    setup->GetMouse()GetKeyboard().KeyEvent().Attach(*ms);
+    setup->GetKeyboard().KeyEvent().Attach(*ms);
     setup->GetMouse().MouseMovedEvent().Attach(*ms);
     setup->GetMouse().MouseButtonEvent().Attach(*ms);
     setup->GetRenderer().PostProcessEvent().Attach(*ms);
