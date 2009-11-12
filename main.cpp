@@ -14,6 +14,8 @@
 #include <Core/Engine.h>
 #include <Renderers/OpenGL/Renderer.h>
 #include <Display/Camera.h>
+#include <Devices/IKeyboard.h>
+#include <Devices/IMouse.h>
 
 // SimpleSetup
 #include <Utils/SimpleSetup.h>
@@ -29,6 +31,11 @@
 // Scene and rendering
 #include <Renderers/OpenGL/DoseCalcRenderingView.h>
 #include <Scene/DoseCalcNode.h>
+
+// Tools
+#include <Utils/MouseSelection.h>
+#include <Utils/CameraTool.h>
+#include <Utils/ToolChain.h>
 
 // name spaces that we will be using.
 // this combined with the above imports is almost the same as
@@ -56,6 +63,9 @@ int main(int argc, char** argv) {
     // Create simple setup
     SimpleSetup* setup = new SimpleSetup("Death by tray.. I mean Death Ray", vp, env, rv);
 
+    IMouse* mouse = 
+    IKeyboard* keyboard;
+
     // Setup Loaders
     ResourceManager<ITexture3DResource>::AddPlugin(new MHDResourcePlugin());
     DirectoryManager::AppendPath("projects/DeathRay/data/");    
@@ -66,6 +76,8 @@ int main(int argc, char** argv) {
     cam->LookAt(0.0, 127.0, 0.0);
     
     // Setup the scene
+    setup->GetRenderer().SetBackgroundColor(Vector<4, float>(0, 0, 0, 1.0));
+    
     ITexture3DResourcePtr mhd = ResourceManager<ITexture3DResource>::Create("20-P.mhd");
     DoseCalcNode* doseNode = new DoseCalcNode(mhd);
     setup->GetRenderer().InitializeEvent().Attach(*doseNode);
@@ -74,6 +86,20 @@ int main(int argc, char** argv) {
     ISceneNode* root = setup->GetScene();
     root->AddNode(doseNode);
     
+    // Setup edit tools
+    ToolChain* chain = new ToolChain();
+    CameraTool* ct = new CameraTool();
+    chain->PushBackTool(ct);    
+
+    MouseSelection* ms = new MouseSelection(*frame, setup->GetMouse(), NULL);
+    ms->BindTool(viewport, chain);
+    
+    setup->GetMouse()GetKeyboard().KeyEvent().Attach(*ms);
+    setup->GetMouse().MouseMovedEvent().Attach(*ms);
+    setup->GetMouse().MouseButtonEvent().Attach(*ms);
+    setup->GetRenderer().PostProcessEvent().Attach(*ms);
+
+
     // Start the engine.
     setup->GetEngine().Start();
 
