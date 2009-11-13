@@ -31,4 +31,5 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
   Extensions_SetupHelpers  
   Extensions_DoseCalculation
   Extensions_OpenGLSelection
+  Extensions_OpenGLRenderer
 )
