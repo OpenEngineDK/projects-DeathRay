@@ -36,6 +36,7 @@
 #include <Utils/MouseSelection.h>
 #include <Utils/CameraTool.h>
 #include <Utils/ToolChain.h>
+#include <Utils/WidgetTool.h>
 
 // name spaces that we will be using.
 // this combined with the above imports is almost the same as
@@ -86,6 +87,10 @@ int main(int argc, char** argv) {
     
     // Setup edit tools
     ToolChain* chain = new ToolChain();
+    WidgetTool wt = new WidgetTool();
+    chain->PushBackTool(wt);
+    wt->AddWidget(doseNode->GetWidget());
+
     CameraTool* ct = new CameraTool();
     chain->PushBackTool(ct);    
 
