@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
     
     // Setup edit tools
     ToolChain* chain = new ToolChain();
-    WidgetTool wt = new WidgetTool();
+    WidgetTool* wt = new WidgetTool(setup->GetTextureLoader());
     chain->PushBackTool(wt);
     wt->AddWidget(doseNode->GetWidget());
 
