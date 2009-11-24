@@ -65,7 +65,6 @@ int main(int argc, char** argv) {
     // Create simple setup
     SimpleSetup* setup = new SimpleSetup("Death by tray.. I mean Death Ray", vp, env, rv);
 
-
     // Setup Loaders
     ResourceManager<ITexture3DResource>::AddPlugin(new MHDResourcePlugin());
     ResourceManager<IFontResource>::AddPlugin(new SDLFontPlugin());
