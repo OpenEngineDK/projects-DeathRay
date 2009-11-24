@@ -27,6 +27,7 @@
 // Resources
 #include <Resources/ResourceManager.h>
 #include <Resources/MHDResource.h>
+#include <Resources/GLSLResource.h>
 
 // Scene and rendering
 #include <Renderers/OpenGL/DoseCalcRenderingView.h>
@@ -67,6 +68,7 @@ int main(int argc, char** argv) {
 
     // Setup Loaders
     ResourceManager<ITexture3DResource>::AddPlugin(new MHDResourcePlugin());
+    ResourceManager<IShaderResource>::AddPlugin(new GLSLPlugin());
     ResourceManager<IFontResource>::AddPlugin(new SDLFontPlugin());
     DirectoryManager::AppendPath("projects/DeathRay/data/");    
 
@@ -79,7 +81,9 @@ int main(int argc, char** argv) {
     setup->GetRenderer().SetBackgroundColor(Vector<4, float>(0, 0, 0, 1.0));
     
     ITexture3DResourcePtr mhd = ResourceManager<ITexture3DResource>::Create("20-P.mhd");
+    IShaderResourcePtr doseShader = ResourceManager<IShaderResource>::Create("projects/DeathRay/data/shaders/DoseShader.glsl");
     DoseCalcNode* doseNode = new DoseCalcNode(mhd);
+    doseNode->SetShader(doseShader);
     setup->GetRenderer().InitializeEvent().Attach(*doseNode);
 
     // setup the scene graph
