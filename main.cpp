@@ -21,6 +21,7 @@
 #include <Utils/SimpleSetup.h>
 #include <Display/SDLEnvironment.h>
 #include <Display/Viewport.h>
+#include <Display/ViewingVolume.h>
 
 // *** Death rays ***
 
@@ -31,6 +32,7 @@
 
 // Scene and rendering
 #include <Renderers/OpenGL/DoseCalcRenderingView.h>
+#include <Renderers/OpenGL/RayCastRenderingView.h>
 #include <Scene/DoseCalcNode.h>
 
 // Tools
@@ -58,13 +60,43 @@ using namespace OpenEngine::Renderers::OpenGL;
  * method in Java.
  */
 int main(int argc, char** argv) {
+
+    float scale = 0.6;
+    int width = 1600 * scale;
+    int height = 800 * scale;
+    
+
+    //add frustrum cameras
+    float dist = 1000;
+
+    // left
+    Camera* cam_l = new Camera(*(new ViewingVolume()));
+    cam_l->SetPosition(Vector<3, float>(0.0, 0.0, dist));
+    cam_l->LookAt(0.0, 0.0, 0.0);
+    Viewport* vp_l = new Viewport(0,0, width/2,height);
+    vp_l->SetViewingVolume(cam_l);
+    // OpenGL::RenderingView* rv_l = new OpenGL::RenderingView(*vp_l);
+    IRenderingView* rv_l = new DoseCalcRenderingView(*vp_l);
+
+    // right
+    Camera* cam_r = new Camera(*(new ViewingVolume()));
+    cam_r->SetPosition(Vector<3,float>(0,0,dist));
+    cam_r->LookAt(0,0,0);
+    Viewport* vp_r = new Viewport(width/2, 0, width,height);
+    vp_r->SetViewingVolume(cam_r);
+    RenderingView* rv_r = new RayCastRenderingView(*vp_r);
+
     // Create Viewport and renderingview
-    IEnvironment* env = new SDLEnvironment(800,600);
-    Viewport* vp = new Viewport(env->GetFrame());
-    IRenderingView* rv = new DoseCalcRenderingView(*vp);
+    IEnvironment* env = new SDLEnvironment(width,height);
+    // Viewport* vp = new Viewport(env->GetFrame());
 
     // Create simple setup
-    SimpleSetup* setup = new SimpleSetup("Death by tray.. I mean Death Ray", vp, env, rv);
+    SimpleSetup* setup = new SimpleSetup("Death by tray.. I mean Death Ray", vp_l, env, rv_l);
+    logger.info << "frame: " << width << "x" << height << logger.end;
+
+    setup->GetRenderer().ProcessEvent().Attach(*rv_r);
+    setup->GetCamera()->SetPosition(Vector<3, float>(0.0, 0.0, dist));
+    setup->GetCamera()->LookAt(0.0, 0.0, 0.0);
 
     // Setup Loaders
     ResourceManager<ITexture3DResource>::AddPlugin(new MHDResourcePlugin());
@@ -72,11 +104,6 @@ int main(int argc, char** argv) {
     ResourceManager<IFontResource>::AddPlugin(new SDLFontPlugin());
     DirectoryManager::AppendPath("projects/DeathRay/data/");    
 
-    // Setup Camera
-    Camera* cam = setup->GetCamera();
-    cam->SetPosition(Vector<3, float>(-256.0, 200.0, -256.0));
-    cam->LookAt(0.0, 127.0, 0.0);
-    
     // Setup the scene
     setup->GetRenderer().SetBackgroundColor(Vector<4, float>(0, 0, 0, 1.0));
     
@@ -101,7 +128,7 @@ int main(int argc, char** argv) {
     wt->AddWidget(doseNode->GetWidget());
 
     MouseSelection* ms = new MouseSelection(env->GetFrame(), setup->GetMouse(), NULL);
-    ms->BindTool(vp, chain);
+    ms->BindTool(vp_l, chain);
     
     setup->GetKeyboard().KeyEvent().Attach(*ms);
     setup->GetMouse().MouseMovedEvent().Attach(*ms);
