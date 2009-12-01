@@ -92,12 +92,13 @@ int main(int argc, char** argv) {
     
     // Setup edit tools
     ToolChain* chain = new ToolChain();
+    
+    CameraTool* ct = new CameraTool();
+    chain->PushBackTool(ct);    
+
     WidgetTool* wt = new WidgetTool(setup->GetTextureLoader());
     chain->PushBackTool(wt);
     wt->AddWidget(doseNode->GetWidget());
-
-    CameraTool* ct = new CameraTool();
-    chain->PushBackTool(ct);    
 
     MouseSelection* ms = new MouseSelection(env->GetFrame(), setup->GetMouse(), NULL);
     ms->BindTool(vp, chain);
