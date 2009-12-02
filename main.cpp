@@ -27,7 +27,6 @@
 
 // Resources
 #include <Resources/ResourceManager.h>
-#include <Resources/MHDResource.h>
 #include <Resources/TemplatedMHDResource.h>
 #include <Resources/GLSLResource.h>
 
