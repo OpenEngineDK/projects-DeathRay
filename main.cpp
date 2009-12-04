@@ -79,11 +79,11 @@ int main(int argc, char** argv) {
     IRenderingView* rv_l = new DoseCalcRenderingView(*vp_l);
 
     // right
-    Camera* cam_r = new Camera(*(new ViewingVolume()));
-    cam_r->SetPosition(Vector<3,float>(0,0,dist));
-    cam_r->LookAt(0,0,0);
+    // Camera* cam_r = new Camera(*(new ViewingVolume()));
+    // cam_r->SetPosition(Vector<3,float>(0,0,dist));
+    // cam_r->LookAt(0,0,0);
     Viewport* vp_r = new Viewport(width/2, 0, width,height);
-    vp_r->SetViewingVolume(cam_r);
+    vp_r->SetViewingVolume(cam_l);
     RenderingView* rv_r = new RayCastRenderingView(*vp_r);
 
     // Create Viewport and renderingview
@@ -95,6 +95,7 @@ int main(int argc, char** argv) {
     logger.info << "frame: " << width << "x" << height << logger.end;
 
     setup->GetRenderer().ProcessEvent().Attach(*rv_r);
+    setup->SetCamera(*cam_l);
     setup->GetCamera()->SetPosition(Vector<3, float>(0.0, 0.0, dist));
     setup->GetCamera()->LookAt(0.0, 0.0, 0.0);
 

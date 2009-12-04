@@ -2,8 +2,8 @@
 # http://www.openengine.dk/wiki/Projects/Deathray
 
 # main repository
-darcs / http://openengine.dk/code/openengine
-darcs-dev / fh.daimi.au.dk:/users/cgd/code/openengine
+darcs / http://openengine.dk/code/branches/thread
+darcs-dev / fh.daimi.au.dk:/users/cgd/code/branches/thread
 
 # project repository
 # (uncomment the following two lines after uploading your project)
