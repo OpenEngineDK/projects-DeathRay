@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
 
     WidgetTool* wt = new WidgetTool(setup->GetTextureLoader());
     chain->PushBackTool(wt);
-    wt->AddWidget(doseNode->GetWidget());
+    wt->AddWidget(new DoseCalcNodeWidget(doseNode));
 
     MouseSelection* ms = new MouseSelection(env->GetFrame(), setup->GetMouse(), NULL);
     ms->BindTool(vp_l, chain);
