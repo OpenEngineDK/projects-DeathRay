@@ -34,13 +34,20 @@
 #include <Renderers/OpenGL/DoseCalcRenderingView.h>
 #include <Renderers/OpenGL/RayCastRenderingView.h>
 #include <Scene/DoseCalcNode.h>
+#include <Scene/BeamNode.h>
+#include <Scene/TransformationNode.h>
 
 // Tools
+#include <Utils/SelectionSet.h>
 #include <Utils/MouseSelection.h>
 #include <Utils/CameraTool.h>
+#include <Utils/TransformationTool.h>
+#include <Utils/SelectionTool.h>
 #include <Utils/ToolChain.h>
 #include <Utils/WidgetTool.h>
 #include <Resources/SDLFont.h>
+#include <Utils/GLSceneSelection.h>
+#include <Renderers/OpenGL/DoseCalcSelectionRenderer.h>
 
 // name spaces that we will be using.
 // this combined with the above imports is almost the same as
@@ -77,7 +84,7 @@ int main(int argc, char** argv) {
     vp_l->SetViewingVolume(cam_l);
     // OpenGL::RenderingView* rv_l = new OpenGL::RenderingView(*vp_l);
     IRenderingView* rv_l = new DoseCalcRenderingView(*vp_l);
-
+    
     // right
     // Camera* cam_r = new Camera(*(new ViewingVolume()));
     // cam_r->SetPosition(Vector<3,float>(0,0,dist));
@@ -112,6 +119,14 @@ int main(int argc, char** argv) {
     IShaderResourcePtr doseShader = ResourceManager<IShaderResource>::Create("projects/DeathRay/data/shaders/DoseShader.glsl");
     DoseCalcNode* doseNode = new DoseCalcNode(mhd);
     doseNode->SetShader(doseShader);
+    // doseNode->AddRay(Ray(Vector<3,float>(0.0),Vector<3,float>(100.0)));
+
+    TransformationNode* t = new TransformationNode();
+    t->SetScale(Vector<3,float>(100,200,100));
+    BeamNode* ray = new BeamNode(1,1);
+    doseNode->AddNode(t);
+    t->AddNode(ray);
+
     setup->GetRenderer().InitializeEvent().Attach(*doseNode);
 
     // setup the scene graph
@@ -120,7 +135,8 @@ int main(int argc, char** argv) {
     
     // Setup edit tools
     ToolChain* chain = new ToolChain();
-    
+
+    SelectionSet<ISceneNode>* ss = new SelectionSet<ISceneNode>();
     CameraTool* ct = new CameraTool();
     chain->PushBackTool(ct);    
 
@@ -128,15 +144,27 @@ int main(int argc, char** argv) {
     chain->PushBackTool(wt);
     wt->AddWidget(new DoseCalcNodeWidget(doseNode));
 
-    MouseSelection* ms = new MouseSelection(env->GetFrame(), setup->GetMouse(), NULL);
+
+    TransformationTool* tt = new TransformationTool(setup->GetTextureLoader());
+    ss->ChangedEvent().Attach(*tt);
+    chain->PushBackTool(tt);
+    
+
+    SelectionTool* st = new SelectionTool(*ss);
+    chain->PushBackTool(st);
+    MouseSelection* ms = 
+        new MouseSelection(env->GetFrame(), 
+                           setup->GetMouse(), 
+                           doseNode, 
+                           new GLSceneSelection(env->GetFrame(), new DoseCalcSelectionRenderer()));
+
     ms->BindTool(vp_l, chain);
     
     setup->GetKeyboard().KeyEvent().Attach(*ms);
     setup->GetMouse().MouseMovedEvent().Attach(*ms);
     setup->GetMouse().MouseButtonEvent().Attach(*ms);
     setup->GetRenderer().PostProcessEvent().Attach(*ms);
-
-
+ 
     // Start the engine.
     setup->GetEngine().Start();
 
