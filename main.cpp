@@ -48,6 +48,7 @@
 #include <Resources/SDLFont.h>
 #include <Utils/GLSceneSelection.h>
 #include <Renderers/OpenGL/DoseCalcSelectionRenderer.h>
+#include <Utils/DoseTrigger.h>
 
 // name spaces that we will be using.
 // this combined with the above imports is almost the same as
@@ -119,13 +120,14 @@ int main(int argc, char** argv) {
     IShaderResourcePtr doseShader = ResourceManager<IShaderResource>::Create("projects/DeathRay/data/shaders/DoseShader.glsl");
     DoseCalcNode* doseNode = new DoseCalcNode(mhd);
     doseNode->SetShader(doseShader);
-    // doseNode->AddRay(Ray(Vector<3,float>(0.0),Vector<3,float>(100.0)));
 
     TransformationNode* t = new TransformationNode();
     t->SetScale(Vector<3,float>(100,200,100));
-    BeamNode* ray = new BeamNode(1,1);
+    BeamNode* beam = new BeamNode(1,1);
     doseNode->AddNode(t);
-    t->AddNode(ray);
+    t->AddNode(beam);
+
+    DoseTrigger* dh = new DoseTrigger(doseNode, beam); 
 
     setup->GetRenderer().InitializeEvent().Attach(*doseNode);
 
@@ -142,8 +144,10 @@ int main(int argc, char** argv) {
 
     WidgetTool* wt = new WidgetTool(setup->GetTextureLoader());
     chain->PushBackTool(wt);
-    wt->AddWidget(new DoseCalcNodeWidget(doseNode));
-
+    DoseCalcNodeWidget* widget =  new DoseCalcNodeWidget(doseNode);
+    widget->AddWidget(new DoseTriggerWidget(dh));
+    widget->SetPosition(Vector<2,int>(20,150));
+    wt->AddWidget(widget);
 
     TransformationTool* tt = new TransformationTool(setup->GetTextureLoader());
     ss->ChangedEvent().Attach(*tt);
