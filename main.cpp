@@ -168,7 +168,10 @@ int main(int argc, char** argv) {
     setup->GetMouse().MouseMovedEvent().Attach(*ms);
     setup->GetMouse().MouseButtonEvent().Attach(*ms);
     setup->GetRenderer().PostProcessEvent().Attach(*ms);
- 
+
+    // FPS
+    setup->ShowFPS();
+
     // Start the engine.
     setup->GetEngine().Start();
 
