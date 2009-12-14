@@ -49,6 +49,8 @@
 #include <Utils/GLSceneSelection.h>
 #include <Renderers/OpenGL/DoseCalcSelectionRenderer.h>
 #include <Utils/DoseTrigger.h>
+#include <Meta/CUDA.h>
+
 
 // name spaces that we will be using.
 // this combined with the above imports is almost the same as
@@ -72,8 +74,10 @@ int main(int argc, char** argv) {
     float scale = 0.6;
     int width = 1600 * scale;
     int height = 800 * scale;
-    
 
+    // Init CUDA
+    INITIALIZE_CUDA();
+    
     //add frustrum cameras
     float dist = 1000;
 
@@ -101,7 +105,9 @@ int main(int argc, char** argv) {
     // Create simple setup
     SimpleSetup* setup = new SimpleSetup("Death by tray.. I mean Death Ray", vp_l, env, rv_l);
     logger.info << "frame: " << width << "x" << height << logger.end;
-
+    //print CUDA
+    logger.info << PRINT_CUDA_DEVICE_INFO() << logger.end;
+    
     setup->GetRenderer().ProcessEvent().Attach(*rv_r);
     setup->SetCamera(*cam_l);
     setup->GetCamera()->SetPosition(Vector<3, float>(0.0, 0.0, dist));
