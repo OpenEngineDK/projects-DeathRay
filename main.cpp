@@ -1,10 +1,10 @@
 // main
 // -------------------------------------------------------------------
-// Copyright (C) 2007 OpenEngine.dk (See AUTHORS) 
-// 
-// This program is free software; It is covered by the GNU General 
-// Public License version 2 or any later version. 
-// See the GNU General Public License for more details (see LICENSE). 
+// Copyright (C) 2007 OpenEngine.dk (See AUTHORS)
+//
+// This program is free software; It is covered by the GNU General
+// Public License version 2 or any later version.
+// See the GNU General Public License for more details (see LICENSE).
 //--------------------------------------------------------------------
 
 // OpenEngine stuff
@@ -89,14 +89,14 @@ int main(int argc, char** argv) {
     vp_l->SetViewingVolume(cam_l);
     // OpenGL::RenderingView* rv_l = new OpenGL::RenderingView(*vp_l);
     IRenderingView* rv_l = new DoseCalcRenderingView(*vp_l);
-    
+
     // right
     // Camera* cam_r = new Camera(*(new ViewingVolume()));
     // cam_r->SetPosition(Vector<3,float>(0,0,dist));
     // cam_r->LookAt(0,0,0);
     Viewport* vp_r = new Viewport(width/2, 0, width,height);
     vp_r->SetViewingVolume(cam_l);
-    RenderingView* rv_r = new RayCastRenderingView(*vp_r);
+    RayCastRenderingView* rv_r = new RayCastRenderingView(*vp_r);
 
     // Create Viewport and renderingview
     IEnvironment* env = new SDLEnvironment(width,height);
@@ -117,11 +117,11 @@ int main(int argc, char** argv) {
     ResourceManager<MHD(float) >::AddPlugin(new TemplatedMHDResourcePlugin<float>());
     ResourceManager<IShaderResource>::AddPlugin(new GLSLPlugin());
     ResourceManager<IFontResource>::AddPlugin(new SDLFontPlugin());
-    DirectoryManager::AppendPath("projects/DeathRay/data/");    
+    DirectoryManager::AppendPath("projects/DeathRay/data/");
 
     // Setup the scene
     setup->GetRenderer().SetBackgroundColor(Vector<4, float>(0, 0, 0, 1.0));
-    
+
     MHDPtr(float) mhd = ResourceManager<MHD(float) >::Create("20-P.mhd");
     IShaderResourcePtr doseShader = ResourceManager<IShaderResource>::Create("projects/DeathRay/data/shaders/DoseShader.glsl");
     DoseCalcNode* doseNode = new DoseCalcNode(mhd);
@@ -140,13 +140,13 @@ int main(int argc, char** argv) {
     // setup the scene graph
     ISceneNode* root = setup->GetScene();
     root->AddNode(doseNode);
-    
+
     // Setup edit tools
     ToolChain* chain = new ToolChain();
 
     SelectionSet<ISceneNode>* ss = new SelectionSet<ISceneNode>();
     CameraTool* ct = new CameraTool();
-    chain->PushBackTool(ct);    
+    chain->PushBackTool(ct);
 
     WidgetTool* wt = new WidgetTool(setup->GetTextureLoader());
     chain->PushBackTool(wt);
@@ -155,21 +155,24 @@ int main(int argc, char** argv) {
     widget->SetPosition(Vector<2,int>(20,150));
     wt->AddWidget(widget);
 
+    RayCastRenderingViewWidget* rcWidget = new RayCastRenderingViewWidget(rv_r);
+    widget->AddWidget(rcWidget);
+
     TransformationTool* tt = new TransformationTool(setup->GetTextureLoader());
     ss->ChangedEvent().Attach(*tt);
     chain->PushBackTool(tt);
-    
+
 
     SelectionTool* st = new SelectionTool(*ss);
     chain->PushBackTool(st);
-    MouseSelection* ms = 
-        new MouseSelection(env->GetFrame(), 
-                           setup->GetMouse(), 
-                           doseNode, 
+    MouseSelection* ms =
+        new MouseSelection(env->GetFrame(),
+                           setup->GetMouse(),
+                           doseNode,
                            new GLSceneSelection(env->GetFrame(), new DoseCalcSelectionRenderer()));
 
     ms->BindTool(vp_l, chain);
-    
+
     setup->GetKeyboard().KeyEvent().Attach(*ms);
     setup->GetMouse().MouseMovedEvent().Attach(*ms);
     setup->GetMouse().MouseButtonEvent().Attach(*ms);
