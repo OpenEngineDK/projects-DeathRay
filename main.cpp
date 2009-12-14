@@ -127,7 +127,7 @@ int main(int argc, char** argv) {
     DoseCalcNode* doseNode = new DoseCalcNode(mhd);
     doseNode->SetShader(doseShader);
 
-    DoseTrigger* dh = new DoseTrigger(doseNode); 
+    DoseTrigger* dh = new DoseTrigger(doseNode, vp_l); 
     doseNode->AddNode(dh->GetPivotNode());
 
     setup->GetRenderer().InitializeEvent().Attach(*doseNode);
@@ -145,12 +145,19 @@ int main(int argc, char** argv) {
 
     WidgetTool* wt = new WidgetTool(setup->GetTextureLoader());
     chain->PushBackTool(wt);
-    DoseCalcNodeWidget* widget =  new DoseCalcNodeWidget(doseNode);
-    widget->AddWidget(new DoseTriggerWidget(dh));
+    
+    Collection* widget = new Collection();
+    Collection* w = new DoseCalcNodeWidget(doseNode);
+    w->SetFixed(true);
+    widget->AddWidget(w);
+    w = new DoseTriggerWidget(dh);
+    w->SetFixed(true);
+    widget->AddWidget(w);
     widget->SetPosition(Vector<2,int>(20,150));
     wt->AddWidget(widget);
 
     RayCastRenderingViewWidget* rcWidget = new RayCastRenderingViewWidget(rv_r);
+    rcWidget->SetFixed(true);
     widget->AddWidget(rcWidget);
 
     TransformationTool* tt = new TransformationTool(setup->GetTextureLoader());
