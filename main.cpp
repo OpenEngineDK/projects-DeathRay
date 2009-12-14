@@ -127,13 +127,8 @@ int main(int argc, char** argv) {
     DoseCalcNode* doseNode = new DoseCalcNode(mhd);
     doseNode->SetShader(doseShader);
 
-    TransformationNode* t = new TransformationNode();
-    t->SetScale(Vector<3,float>(100,200,100));
-    BeamNode* beam = new BeamNode(1,1);
-    doseNode->AddNode(t);
-    t->AddNode(beam);
-
-    DoseTrigger* dh = new DoseTrigger(doseNode, beam); 
+    DoseTrigger* dh = new DoseTrigger(doseNode); 
+    doseNode->AddNode(dh->GetPivotNode());
 
     setup->GetRenderer().InitializeEvent().Attach(*doseNode);
 
