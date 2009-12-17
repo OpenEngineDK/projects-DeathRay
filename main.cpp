@@ -158,12 +158,12 @@ int main(int argc, char** argv) {
     w->SetPadding(Vector<4,int>(0));
     widget->AddWidget(w);
     widget->SetPosition(Vector<2,int>(20,150));
-    wt->AddWidget(widget);
     w = new RayCastRenderingViewWidget(rv_r);
     w->SetFixed(true);
     w->SetBackground(false);
     w->SetPadding(Vector<4,int>(0));
     widget->AddWidget(w);
+    wt->AddWidget(widget);
 
     TransformationTool* tt = new TransformationTool(setup->GetTextureLoader());
     ss->ChangedEvent().Attach(*tt);
