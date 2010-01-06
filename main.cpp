@@ -143,8 +143,8 @@ int main(int argc, char** argv) {
     CameraTool* ct = new CameraTool();
     chain->PushBackTool(ct);
 
-    WidgetTool* wt = new WidgetTool(setup->GetTextureLoader());
-    chain->PushBackTool(wt);
+    WidgetTool* wt1 = new WidgetTool(setup->GetTextureLoader());
+    chain->PushBackTool(wt1);
     
     Collection* widget = new Collection();
     Collection* w = new DoseCalcNodeWidget(doseNode);
@@ -157,18 +157,20 @@ int main(int argc, char** argv) {
     w->SetBackground(false);
     w->SetPadding(Vector<4,int>(0));
     widget->AddWidget(w);
-    widget->SetPosition(Vector<2,int>(20,150));
-    w = new RayCastRenderingViewWidget(rv_r);
-    w->SetFixed(true);
-    w->SetBackground(false);
-    w->SetPadding(Vector<4,int>(0));
-    widget->AddWidget(w);
-    wt->AddWidget(widget);
+    widget->SetPosition(Vector<2,int>(20,20));
+    wt1->AddWidget(widget);
 
     TransformationTool* tt = new TransformationTool(setup->GetTextureLoader());
     ss->ChangedEvent().Attach(*tt);
     chain->PushBackTool(tt);
 
+
+    WidgetTool* wt2 = new WidgetTool(setup->GetTextureLoader());
+    w = new RayCastRenderingViewWidget(rv_r);
+    w->SetPosition(Vector<2,int>(20,20));
+    w->SetFixed(false);
+    w->SetBackground(true);
+    wt2->AddWidget(w);
 
     SelectionTool* st = new SelectionTool(*ss);
     chain->PushBackTool(st);
@@ -179,6 +181,7 @@ int main(int argc, char** argv) {
                            new GLSceneSelection(env->GetFrame(), new DoseCalcSelectionRenderer()));
 
     ms->BindTool(vp_l, chain);
+    ms->BindTool(vp_r, wt2);
 
     setup->GetKeyboard().KeyEvent().Attach(*ms);
     setup->GetMouse().MouseMovedEvent().Attach(*ms);
