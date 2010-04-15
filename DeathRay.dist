@@ -2,8 +2,8 @@
 # http://www.openengine.dk/wiki/Projects/Deathray
 
 # main repository
-darcs / http://openengine.dk/code/branches/thread
-darcs-dev / fh.daimi.au.dk:/users/cgd/code/branches/thread
+darcs / http://openengine.dk/code/openengine
+darcs-dev / fh.daimi.au.dk:/users/cgd/code/openengine
 
 # project repository
 # (uncomment the following two lines after uploading your project)
@@ -23,7 +23,6 @@ darcs /extensions/OBJResource            http://openengine.dk/code/extensions/OB
 darcs /extensions/AccelerationStructures http://openengine.dk/code/extensions/AccelerationStructures
 darcs /extensions/DoseCalculation 	 http://openengine.dk/code/extensions/DoseCalculation
 darcs /extensions/CUDA                   http://openengine.dk/code/extensions/CUDA
-darcs /extensions/TemplatedTextures      http://openengine.dk/code/extensions/TemplatedTextures
 
 darcs-dev /extensions/SetupHelpers           fh.daimi.au.dk:/users/cgd/code/extensions/SetupHelpers
 darcs-dev /extensions/HUD                    fh.daimi.au.dk:/users/cgd/code/extensions/HUD
@@ -37,7 +36,6 @@ darcs-dev /extensions/OBJResource            fh.daimi.au.dk:/users/cgd/code/exte
 darcs-dev /extensions/AccelerationStructures fh.daimi.au.dk:/users/cgd/code/extensions/AccelerationStructures
 darcs-dev /extensions/DoseCalculation 	     fh.daimi.au.dk:/users/cgd/code/extensions/DoseCalculation
 darcs-dev /extensions/CUDA                   fh.daimi.au.dk:/users/cgd/code/extensions/CUDA
-darcs-dev /extensions/TemplatedTextures      fh.daimi.au.dk:/users/cgd/code/extensions/TemplatedTextures
 
 # windows libraries
 win32 /libraries http://openengine.dk/data/libraries/boost-win32.zip
