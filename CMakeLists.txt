@@ -32,4 +32,5 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME}
   Extensions_DoseCalculation
   Extensions_OpenGLSelection
   Extensions_OpenGLRenderer
+  Extensions_SDLFont
 )
